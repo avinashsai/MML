@@ -4,7 +4,6 @@ import random
 import logging
 logging.disable(logging.INFO) 
 logging.disable(logging.WARNING)
-os.environ['TRANSFORMERS_CACHE'] = '/playpen-storage/avinashm/hg/'
 import numpy as np
 import pandas as pd
 import torch
@@ -22,10 +21,10 @@ from transformers import (
 )
 
 print(torch.cuda.is_available())
-main_data_path = '/playpen-storage/avinashm/Experiments/ling/data/'
+main_data_path = 'data'
 
-logs_dir = '/playpen-storage/avinashm/Experiments/ling/finetune/logs'
-resultspath = '/playpen-storage/avinashm/Experiments/ling/finetune/results'
+logs_dir = 'logs'
+resultspath = 'results'
 
 if(os.path.exists(logs_dir) == False):
     os.mkdir(logs_dir)
@@ -112,7 +111,7 @@ def main():
         os.mkdir(save_res_dir)
 
     if(modelname.startswith('pretrain')):
-        submodelpath = '/playpen-storage/avinashm/Experiments/ling/pretrain/weights'
+        submodelpath = 'pretrain/weights'
         x = modelname.split("_")[2:]
         submodelname = x[0]
         for x1 in x[1:]:
@@ -120,7 +119,7 @@ def main():
             submodelname += x1
         modelpath = os.path.join(submodelpath, submodelname)
     else:
-        submodelpath = '/playpen-storage/avinashm/Experiments/ling/premodels'
+        submodelpath = 'premodels'
         submodelname = original_dict[modelname][1]
         modelpath = os.path.join(submodelpath, submodelname)
 
@@ -132,7 +131,7 @@ def main():
         num_train_epochs = 5
     elif(typ == 'cs'):
         tasks = ['socialiqa', 'cosmosqa', 'winogrande', 'codah', 'hellaswag']
-        num_train_epochs = 1
+        num_train_epochs = 10
     elif(typ == 'superglue'):
         tasks = ['boolq', 'wic', 'cb', 'copa', 'wsc']
         num_train_epochs = 25
@@ -149,8 +148,7 @@ def main():
         print("#############################################################################################")
         folderpath = os.path.join(data_path, task_to_files[task]['folder'])
         
-        #seeds = [6035, 6792, 9061, 4599, 3496]
-        seeds = [6035]
+        seeds = [6035, 6792, 9061, 4599, 3496]
         print("Maximum Sentence Length: {} and Number of Epochs: {} ".format(task_to_files[task]['senlen'], num_train_epochs))
         print("Number of runs: {} ".format(len(seeds)))
         each_task_acc = []
